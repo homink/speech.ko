@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-stage=2
+stage=0
 corpus=.
 :<<"SKIP"
 This script assumes that corpus folder contains the following zip files, which is a full set of Korean reading speech in National Institute of Korean Language.
