@@ -9,7 +9,7 @@ https://ithub.korean.go.kr/user/corpus/referenceManager.do
 Once you download all corpus files from above, you will find the following zip files.
 
 ```
-> ls *.zip
+ls *.zip
 3-1 #1 (20대 남성) 4-1.zip  3-2 #1 (30대 남성) 5-1.zip  3-2 #2 (40대 여성) 5-5.zip
 3-1 #1 (20대 남성) 4-2.zip  3-2 #1 (30대 남성) 5-2.zip  3-3 #3 (50대 이상 남성여성) 6-1.zip
 3-1 #1 (20대 남성) 4-3.zip  3-2 #1 (30대 남성) 5-3.zip  3-3 #3 (50대 이상 남성여성) 6-2.zip
@@ -24,5 +24,5 @@ Once you download all corpus files from above, you will find the following zip f
 ## Command
 
 ```
-> ./run.sh --corpus <directory where above zip files are>
+./run.sh --corpus <directory where above zip files are>
 ```
