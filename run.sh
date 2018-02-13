@@ -74,7 +74,7 @@ if [ $stage -le 1 ]; then
 
   find $corpus -name "*.wav" | grep -v "Bad\|Non\|Invalid" > $corpus/wav.lst
 
-  rm -f *.slst *.info
+  rm -f $corpus/*.slst $corpus/*.info
   split -l $(echo $(($(wc -l $corpus/wav.lst | awk '{print $1}') / 9))) \
     $corpus/wav.lst -d $corpus/wav. --additional-suffix=.slst
   cn=1;for x in $corpus/*.slst;do mv $x $corpus/wav.$cn.slst; cn=$((cn+1));done
@@ -118,7 +118,7 @@ if [ $stage -le 2 ]; then
     exit
   fi
 
-  rm -f wav.*.bad
+  rm -f $corpus/wav.*.bad
   awk '{print $1}' $corpus/trans.txt > $corpus/tid.lst
   utils/run.pl JOB=1:10 $corpus/wav.JOB.bad \
     utils/search_badname.sh $corpus/wav.JOB.slst $corpus/tid.lst JOB || exit 1;
