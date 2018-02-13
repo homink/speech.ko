@@ -34,9 +34,6 @@ SKIP
 
 . utils/parse_options.sh  # e.g. this parses the --stage option if supplied.
 
-WAI=$PWD
-cd $corpus
-
 if [ $stage -le 0 ]; then
   zl=$(ls $corpus/*.zip | wc -l)
   if [ "$zl" -ne 25 ];then
@@ -57,7 +54,7 @@ if [ $stage -le 0 ]; then
     done
   fi
   find $corpus -name "*.wav" -exec ls -l {} \; | awk '{print $6" "$NF}' > $corpus/wav_all.lst
-  if [ "$(wc -l wav_all.lst | awk '{print $1}')" -ne 87407 ];then
+  if [ "$(wc -l $corpus/wav_all.lst | awk '{print $1}')" -ne 87407 ];then
     echo "87407 wav files should be found here"
     exit
   fi
@@ -82,8 +79,8 @@ if [ $stage -le 1 ]; then
     $corpus/wav.lst -d $corpus/wav. --additional-suffix=.slst
   cn=1;for x in $corpus/*.slst;do mv $x $corpus/wav.$cn.slst; cn=$((cn+1));done
 
-  $WAI/utils/run.pl JOB=1:10 $corpus/sox.JOB.info \
-    $WAI/utils/check_wavinfo.sh $corpus/wav.JOB.slst JOB
+  utils/run.pl JOB=1:10 $corpus/sox.JOB.info \
+    utils/check_wavinfo.sh $corpus/wav.JOB.slst JOB || exit 1;
 
   #echo -n "NIKL corpus has ";
   #echo $(expr $(grep Duration $corpus/sox.*.info | awk '{print $5}' | paste -sd+ | bc) / 57600000)" hours"
@@ -109,28 +106,24 @@ if [ $stage -le 1 ]; then
 fi
 
 if [ $stage -le 2 ]; then
-  if [ ! -f $corpus/trans.txt ]; then
-    file_enc=$(file -i $corpus/script_nmbd_by_sentence.txt | sed 's/.*charset=//g')
+  file_enc=$(file -i $corpus/script_nmbd_by_sentence.txt | sed 's/.*charset=//g')
 
-    #For Python2
-    python $WAI/utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
-    #For Python3
-    #python $WAI/utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
-  fi
+  #For Python2
+  python utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
+  #For Python3
+  #python utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
 
   if [ "$(wc -l $corpus/trans.txt | awk '{print $1}')" -ne 930 ];then
     echo "$corpus/trans.txt should have 930 lines. Please check!"
     exit
   fi
 
-  if [ ! -f $corpus/BadName_wav.lst ];then
-    rm -f wav.*.bad
-    awk '{print $1}' $corpus/trans.txt > $corpus/tid.lst
-    $WAI/utils/run.pl JOB=1:10 $corpus/wav.JOB.bad \
-      $WAI/utils/search_badname.sh $corpus/wav.JOB.slst $corpus/tid.lst JOB
+  rm -f wav.*.bad
+  awk '{print $1}' $corpus/trans.txt > $corpus/tid.lst
+  utils/run.pl JOB=1:10 $corpus/wav.JOB.bad \
+    utils/search_badname.sh $corpus/wav.JOB.slst $corpus/tid.lst JOB || exit 1;
 
-    grep -v "\#" wav.*.bad | sed 's/.*bad://g' | sort > $corpus/BadName_wav.lst
-  fi
+  grep -v "\#" $corpus/wav.*.bad | sed 's/.*bad://g' | sort > $corpus/BadName_wav.lst
 
   mkdir -p $corpus/BadName
   cat $corpus/BadName_wav.lst | while read wavfile;do
@@ -192,7 +185,7 @@ if [ $stage -le 2 ]; then
     done
   fi
 fi
-
+exit
 if [ $stage -le 3 ]; then
 
   if ! type sox > /dev/null;then
@@ -213,9 +206,7 @@ if [ $stage -le 3 ]; then
   cn=1;for x in $corpus/*.slst;do mv $x $corpus/wav.$cn.slst; cn=$((cn+1));done
 
   mkdir -p $corpus/trimmed_data
-  $WAI/utils/run.pl JOB=1:10 $corpus/trim.JOB.info \
-    $WAI/utils/trim_nikl.sh $corpus/wav.JOB.slst $corpus/trimmed_data JOB
+  utils/run.pl JOB=1:10 $corpus/trim.JOB.info \
+    utils/trim_nikl.sh $corpus/wav.JOB.slst $corpus/trimmed_data JOB || exit 1;
 
 fi
-
-cd $WAI
