@@ -22,7 +22,7 @@ ls *.zip
 ```
 ## Dependencies
 ### [sox](http://sox.sourceforge.net/sox.html)
-### [audiotok](https://github.com/amsehili/auditok)
+### [auditok](https://github.com/amsehili/auditok)
 
 ## Command
 
