@@ -185,7 +185,7 @@ if [ $stage -le 2 ]; then
     done
   fi
 fi
-exit
+
 if [ $stage -le 3 ]; then
 
   if ! type sox > /dev/null;then
