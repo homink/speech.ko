@@ -34,6 +34,9 @@ SKIP
 
 . utils/parse_options.sh  # e.g. this parses the --stage option if supplied.
 
+WAI=$PWD
+cd $corpus
+
 if [ $stage -le 0 ]; then
   zl=$(ls $corpus/*.zip | wc -l)
   if [ "$zl" -ne 25 ];then
@@ -43,19 +46,18 @@ if [ $stage -le 0 ]; then
 
   ls -1 $corpus/*.zip | while read file;do
     echo "extracing $file ... "
-    unzip -o "$file"
+    unzip -o "$file" -d $corpus
   done
 
-  if [ -d "3-3(50female)" ];then
+  if [ -d $corpus/"3-3(50female)" ];then
     for x in "3-3(50female)" "3-3(50male)";do
-      echo "movinig $x/* to $corpus"
-      mv $x/* $corpus
-      rm -rf $x
+      echo "movinig $corpus/$x/* to $corpus"
+      mv $corpus/$x/* $corpus
+      rm -rf $corpus/$x
     done
   fi
-
-  find $corpus -name "*.wav" -exec ls -l {} \; | awk '{print $6" "$NF}' > wav_all.lst
-  if [ "$(wc -l $corpus/wav_all.lst | awk '{print $1}')" -ne 87407 ];then
+  find $corpus -name "*.wav" -exec ls -l {} \; | awk '{print $6" "$NF}' > $corpus/wav_all.lst
+  if [ "$(wc -l wav_all.lst | awk '{print $1}')" -ne 87407 ];then
     echo "87407 wav files should be found here"
     exit
   fi
@@ -64,7 +66,7 @@ fi
 if [ $stage -le 1 ]; then
 
   #This file is not recorded correctly
-  line=$(sort -n wav_all.lst | head -1)
+  line=$(sort -n $corpus/wav_all.lst | head -1)
   IFS=" " read sl fname <<< $line
   if [ "$sl" -eq 44 ];then
     mkdir -p $corpus/Invalid
@@ -80,15 +82,15 @@ if [ $stage -le 1 ]; then
     $corpus/wav.lst -d $corpus/wav. --additional-suffix=.slst
   cn=1;for x in $corpus/*.slst;do mv $x $corpus/wav.$cn.slst; cn=$((cn+1));done
 
-  utils/run.pl JOB=1:10 $corpus/sox.JOB.info \
-    utils/check_wavinfo.sh $corpus/wav.JOB.slst JOB
+  $WAI/utils/run.pl JOB=1:10 $corpus/sox.JOB.info \
+    $WAI/utils/check_wavinfo.sh $corpus/wav.JOB.slst JOB
 
   #echo -n "NIKL corpus has ";
   #echo $(expr $(grep Duration $corpus/sox.*.info | awk '{print $5}' | paste -sd+ | bc) / 57600000)" hours"
 
   grep "Input\|Sample Rate" $corpus/sox.*.info | \
     sed 's/.*: //g' | sed "s/'//g" | tr '\n' ' ' | \
-    sed 's/16000/16000\n/g' | sed 's/44100/44100\n/g' | 
+    sed 's/16000/16000\n/g' | sed 's/44100/44100\n/g' |
     sed 's/48000/48000\n/g' | sed 's/^ //g' | \
     grep -v 16000 > $corpus/Non16KHz_wav.lst
 
@@ -111,9 +113,9 @@ if [ $stage -le 2 ]; then
     file_enc=$(file -i $corpus/script_nmbd_by_sentence.txt | sed 's/.*charset=//g')
 
     #For Python2
-    python utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
+    python $WAI/utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
     #For Python3
-    #python utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
+    #python $WAI/utils/extract_trans_p2.py $corpus/script_nmbd_by_sentence.txt "$file_enc" > $corpus/trans.txt
   fi
 
   if [ "$(wc -l $corpus/trans.txt | awk '{print $1}')" -ne 930 ];then
@@ -124,8 +126,8 @@ if [ $stage -le 2 ]; then
   if [ ! -f $corpus/BadName_wav.lst ];then
     rm -f wav.*.bad
     awk '{print $1}' $corpus/trans.txt > $corpus/tid.lst
-    utils/run.pl JOB=1:10 $corpus/wav.JOB.bad \
-      utils/search_badname.sh $corpus/wav.JOB.slst $corpus/tid.lst JOB
+    $WAI/utils/run.pl JOB=1:10 $corpus/wav.JOB.bad \
+      $WAI/utils/search_badname.sh $corpus/wav.JOB.slst $corpus/tid.lst JOB
 
     grep -v "\#" wav.*.bad | sed 's/.*bad://g' | sort > $corpus/BadName_wav.lst
   fi
@@ -136,7 +138,7 @@ if [ $stage -le 2 ]; then
       cp $wavfile $corpus/BadName
     fi
   done
-  
+
   bl=$(wc -l $corpus/BadName_wav.lst | awk '{print $1}')
 
   if [ "$bl" -gt 0 ];then
@@ -187,7 +189,7 @@ if [ $stage -le 2 ]; then
 
     cat $corpus/BadName_wav.lst | while read wavfile;do
       rm -f $wavfile
-    done 
+    done
   fi
 fi
 
@@ -202,15 +204,18 @@ if [ $stage -le 3 ]; then
     echo "auditok (https://github.com/amsehili/auditok) is not found. please install it!"
     exit
   fi
-  
-  find $corpus -name "*.wav" | grep -v "Bad\|Non\|Invalid" > wav_list
-  
-  split -l $(echo $(($(wc -l wav_list | awk '{print $1}') / 9))) \
-    wav_list -d wav. --additional-suffix=.slst
-  cn=1;for x in *.slst;do mv $x wav.$cn.slst; cn=$((cn+1));done
 
-  mkdir -p trimmed_data
-  utils/run.pl JOB=1:10 trim.JOB.info \
-    utils/trim_nikl.sh wav.JOB.slst trimmed_data JOB
+  find $corpus -name "*.wav" | grep -v "Bad\|Non\|Invalid" > $corpus/wav_list
+
+  rm -f $corpus/*.slst
+  split -l $(echo $(($(wc -l $corpus/wav_list | awk '{print $1}') / 9))) \
+    $corpus/wav_list -d wav. --additional-suffix=.slst
+  cn=1;for x in $corpus/*.slst;do mv $x $corpus/wav.$cn.slst; cn=$((cn+1));done
+
+  mkdir -p $corpus/trimmed_data
+  $WAI/utils/run.pl JOB=1:10 $corpus/trim.JOB.info \
+    $WAI/utils/trim_nikl.sh $corpus/wav.JOB.slst $corpus/trimmed_data JOB
 
 fi
+
+cd $WAI
