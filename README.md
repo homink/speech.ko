@@ -20,6 +20,32 @@ ls *.zip
 3-1 #2 (20대 여성) 5-4.zip  3-2 #2 (40대 여성) 5-3.zip
 3-1 #2 (20대 여성) 5-5.zip  3-2 #2 (40대 여성) 5-4.zip
 ```
+
+Transcription file contains 19 topics with the following number of sentences.
+| Topic  | # of sentence |
+| -------|:-------------:|
+| 1      | 51            |
+| 2      | 87            |
+| 3      | 69            |
+| 4      | 62            |
+| 5      | 47            |
+| 6      | 54            |
+| 7      | 62            |
+| 8      | 94            |
+| 9      | 60            |
+| 10     | 73            |
+| 11     | 42            |
+| 12     | 28            |
+| 13     | 39            |
+| 14     | 27            |
+| 15     | 17            |
+| 16     | 35            |
+| 17     | 19            |
+| 18     | 27            |
+| 19     | 40            |
+| -------|:-------------:|
+| Total  | 930            |
+
 ## Dependencies
 ### [sox](http://sox.sourceforge.net/sox.html)
 ### [auditok](https://github.com/amsehili/auditok)
