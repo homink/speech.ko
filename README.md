@@ -20,6 +20,9 @@ ls *.zip
 3-1 #2 (20대 여성) 5-4.zip  3-2 #2 (40대 여성) 5-3.zip
 3-1 #2 (20대 여성) 5-5.zip  3-2 #2 (40대 여성) 5-4.zip
 ```
+## Dependencies
+### [sox](http://sox.sourceforge.net/sox.html)
+### [audiotok](https://github.com/amsehili/auditok)
 
 ## Command
 
