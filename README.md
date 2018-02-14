@@ -1,7 +1,7 @@
 # speech.ko
 Korean read speech corpus (about 120 hours, 17GB) from National Institute of Korean Language (NIKL)
 
-This repository is used to clean up NIKL corpus such as voiding unnecessary wav files, matching sampling rate, trimming silence, etc. Details are below.
+This repository cleans up NIKL corpus such as voiding unnecessary wav files, matching sampling rate, trimming silence, etc. Details are below.
 
 ## Location
 http://www.korean.go.kr/front/board/boardStandardView.do?board_id=4&mn_id=17&b_seq=464
@@ -59,3 +59,5 @@ auditok is used to trim unnecessary silence in the beginning and in the end.
 ```
 ./run.sh --corpus <directory where above zip files are>
 ```
+
+Cleaned and trimmed wav files will be found in <directory where above zip files are>/trimmed_data.
