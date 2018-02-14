@@ -1,5 +1,6 @@
 # speech.ko
 Korean read speech corpus (about 120 hours, 17GB) from National Institute of Korean Language (NIKL)
+
 This repository is used to clean up NIKL corpus such as voiding unnecessary wav files, matching sampling rate, trimming silence, etc. Details are below.
 
 ## Location
