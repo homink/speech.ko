@@ -60,4 +60,4 @@ auditok is used to trim unnecessary silence in the beginning and in the end.
 ./run.sh --corpus <directory where above zip files are>
 ```
 
-Cleaned and trimmed wav files will be found in <directory where above zip files are>/trimmed_data.
+Cleaned and trimmed wav files will be found in \<directory where above zip files are\>/trimmed_data.
