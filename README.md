@@ -44,7 +44,7 @@ Transcription file contains 19 topics with the following number of sentences.
 | 18     | 27            |
 | 19     | 40            |
 | -------|:-------------:|
-| Total  | 930            |
+| Total  | 930           |
 
 ## Dependencies
 ### [sox](http://sox.sourceforge.net/sox.html)
