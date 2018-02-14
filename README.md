@@ -44,7 +44,6 @@ Transcription file contains 19 topics with the following number of sentences.
 | 17     | 19            |
 | 18     | 27            |
 | 19     | 40            |
-| -------|:-------------:|
 | Total  | 930           |
 
 ## Dependencies
