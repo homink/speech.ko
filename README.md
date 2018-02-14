@@ -48,7 +48,9 @@ Transcription file contains 19 topics with the following number of sentences.
 
 ## Dependencies
 ### [sox](http://sox.sourceforge.net/sox.html)
+sox is used to check wav file info such as sampling rate and correct format, and used to convert sampling rate if necessary.
 ### [auditok](https://github.com/amsehili/auditok)
+auditok is used to trim unnecessary silence in the beginning and in the end.
 
 ## Command
 
