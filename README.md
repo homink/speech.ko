@@ -23,7 +23,7 @@ ls *.zip
 
 Transcription file contains 19 topics with the following number of sentences.
 | Topic  | # of sentence |
-| -------|:-------------:|
+| ------------- |:-------------:|
 | 1      | 51            |
 | 2      | 87            |
 | 3      | 69            |
