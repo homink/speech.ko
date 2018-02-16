@@ -72,7 +72,7 @@ auditok is used to trim unnecessary silence in the beginning and in the end.
 ```
 git clone https://github.com/homink/speech.ko.git
 cd speech.ko
-./run.sh --corpus <directory where above zip files are>
+./run.sh --corpus ${corpus_location}
 ```
 
-Cleaned and trimmed wav files will be found in \<directory where above zip files are\>/trimmed_data.
+Cleaned and trimmed wav files will be found in \$\{corpus_location\}/trimmed_data.
