@@ -57,6 +57,8 @@ auditok is used to trim unnecessary silence in the beginning and in the end.
 ## Command
 
 ```
+git clone https://github.com/homink/speech.ko.git
+cd speech.ko
 ./run.sh --corpus <directory where above zip files are>
 ```
 
