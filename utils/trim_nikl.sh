@@ -13,8 +13,9 @@ cat $1 | while read x;do
   if [ $(echo "0.0"'>'$cbegin | bc -l) -eq 1 ];then cbegin=$begin; fi
   if [ $(echo $(echo "$cbegin+$diff" | bc)'>='$end | bc -l) -eq 1 ];then diff=$end; fi
 
-  folder=$(dirname "${x}")
-  mkdir -p $new_dir/$folder
-  sox $x $new_dir/$x trim $cbegin $diff
+  spk=$(echo $(dirname "${x}") | awk -F/ '{print $NF}')
+  fname=$(basename "${x}")
+  mkdir -p $new_dir/$spk
+  sox $x $new_dir/$spk/$fname trim $cbegin $diff
 done
 
