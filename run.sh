@@ -58,6 +58,7 @@ if [ $stage -le 0 ]; then
     echo "87407 wav files should be found here"
     exit
   fi
+  echo "stage 0 done"
 fi
 
 if [ $stage -le 1 ]; then
@@ -103,6 +104,7 @@ if [ $stage -le 1 ]; then
     done
     echo "$(wc -l $corpus/Non16KHz_wav.lst) files are not sampled with 16KHz thus forcely resampled to 16KHz."
   fi
+  echo "stage 1 done"
 fi
 
 if [ $stage -le 2 ]; then
@@ -184,6 +186,7 @@ if [ $stage -le 2 ]; then
       rm -f $wavfile
     done
   fi
+  echo "stage 2 done"
 fi
 
 if [ $stage -le 3 ]; then
@@ -202,11 +205,14 @@ if [ $stage -le 3 ]; then
 
   rm -f $corpus/*.slst
   split -l $(echo $(($(wc -l $corpus/wav_list | awk '{print $1}') / 9))) \
-    $corpus/wav_list -d wav. --additional-suffix=.slst
+    $corpus/wav_list -d $corpus/wav. --additional-suffix=.slst
   cn=1;for x in $corpus/*.slst;do mv $x $corpus/wav.$cn.slst; cn=$((cn+1));done
 
   mkdir -p $corpus/trimmed_data
   utils/run.pl JOB=1:10 $corpus/trim.JOB.info \
     utils/trim_nikl.sh $corpus/wav.JOB.slst $corpus/trimmed_data JOB || exit 1;
 
+ echo "stage 3 done"
 fi
+
+echo "$corpus/trimmed_data is ready to use!"
