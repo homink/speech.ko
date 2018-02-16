@@ -48,6 +48,19 @@ Transcription file contains 19 topics with the following number of sentences.
 | 19     | 40            |
 | Total  | 930           |
 
+When unzipped, you will find speaker ids as follows.
+
+| Gender | Speaker ID    | Age            |
+|:------:|:-------------:|:--------------:|
+| Female | fv01 to fv20  | 20s            |
+| Female | fx01 to fx20  | 40s            |
+| Female | fy01 to fy18  | Older than 50s |
+| Female | fz05 to fz06  | Older than 50s |
+| Male   | mv01 to mv20  | 20s            |
+| Male   | mw01 to mw20  | 30s            |
+| Male   | my01 to my11  | Older than 50s |
+| Male   | mz01 to mz09  | Older than 50s |
+
 ## Dependencies
 ### [sox](http://sox.sourceforge.net/sox.html)
 sox is used to check wav file info such as sampling rate and correct format, and used to convert sampling rate if necessary.
