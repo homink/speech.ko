@@ -53,7 +53,8 @@ if [ $stage -le 0 ]; then
       rm -rf $corpus/$x
     done
   fi
-  find $corpus -name "*.wav" -exec ls -l {} \; | awk '{print $6" "$NF}' > $corpus/wav_all.lst
+  # du has a much more stable and defined output compared to ls
+  find $corpus -name "*.wav" -exec du -b {} \; > $corpus/wav_all.lst
   if [ "$(wc -l $corpus/wav_all.lst | awk '{print $1}')" -ne 87407 ];then
     echo "87407 wav files should be found here"
     exit
